@@ -1,46 +1,44 @@
-# Getting Started with Create React App
+# Instalacion
+```
+npm install
+npm start
+```
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Para ver las acciones que se realizan en este proyecto, se deben instala [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=es).
 
-## Available Scripts
+# Redux DevTools
 
-In the project directory, you can run:
+Para ver las acciones que se realizan en este proyecto, se deben instala [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=es).
 
-### `npm start`
+- Al presionar la tecla F12, en la pestaña Redux, se puede observar las acciones que se realizan en la pagina
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+![Redux DevTools](https://user-images.githubusercontent.com/7957859/48663602-3aac4900-ea9b-11e8-921f-97059cbb599c.png)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+# Arquitectura de desarrollo
 
-### `npm test`
+- Se utiliza la forma de desarrollo [Duck Pattern](https://github.com/erikras/ducks-modular-redux)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Donde dentro de la carpeta "ducks", se encuentran las carpetas correspondientes a cada unos de los datos que se quieren modelar. En este caso como trabajamos con usuarios, dentro de la carpeta ducks/users se encuentra toda la logica de redux correspondiente a los usuarios. Si incluyeramos una nueva entidad, habria que agregar otra carpeta, siguiendo la arquitectura de desarrollo que tiene user, la cual es la siguiente
 
-### `npm run build`
+- users/types.ts: Es el archivo que define los tipos de acciones que se van a realizar para los usuarios
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- users/index.ts: Es el archivo principal, que contiene el reducer de las acciones del los usuarios, este archivo mediante acciones modifica la store de redux
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- users/sagas.ts: Aqui se encuentra la logica asincrona de nuestro reducer, al ser redux saga, se trabaja con [generator functions](https://codeburst.io/understanding-generators-in-es6-javascript-with-examples-6728834016d5)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- users/actions.ts: Define todas las acciones que se van a utilizar en la entidad usuario
 
-### `npm run eject`
+## Archivos genericos
+- rootReducer.ts: Este archivo es una combinacion de todos los reducers que se van a crear en nuestra aplicacion, en este caso comoo simplemente tenemos el reducer de usuarios en users/index.ts, solo agregamos dicho reducer
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- rootSaga.ts: Al igual que el root reducer, aqui se combinan todas las sagas y se ejecutan segun lo que nuestra aplicacion requira.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- store/index.ts: En este archivo se crea la store de nuestra aplicacion y se reunen todos los reducers provistos por rootReducer.ts y todas las sagas provistas por rootSaga.ts
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Para proveer a nuestra aplicacion de la store
+```
+<Provider store= {store}>
+    <Nuestro_componente />
+<Provider>
+```
+De esta forma toda nuestra aplicacion tiene acceso a la store, esto se puede observar en App.tsx
