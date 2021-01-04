@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { IUser } from '../interfaces/user/IUser';
@@ -10,8 +10,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    loadRequest() : void,
-    deleteUser(user: IUser) : void
+    loadRequest() : void
 }
 
 // interface OwnProps {
@@ -21,12 +20,12 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps;
 
 function ListUsers (props: Props) {
-    const { users, loadRequest, deleteUser } = props;
+    const { users, loadRequest } = props;
 
     React.useEffect(() => {
 
+        // Cuando se inicia el componente, se llama a la accion loadRequest()
         loadRequest();
-        deleteUser(users[0])
     },[]);
 
 
@@ -43,11 +42,15 @@ function ListUsers (props: Props) {
 }
 
 
+// Provee datos desde la store al componente
+
 const mapStateToProps = (state : ApplicationState) => (
     {
         users : state.users.data as IUser[]
     }
 );
+
+// Provee las acciones al componente
 
 const mapDispatchToProps = (dispatch : Dispatch) => (
     bindActionCreators(UserActions, dispatch)
